@@ -7,9 +7,7 @@ import security.Security
 object GeoLayers extends Controller {
 
   def layers(layerType: String) = Action { implicit request =>
-    Security.verify {
-      Ok(layerType)
-    }
+    Ok(layerType)
   }
 
 }

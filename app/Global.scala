@@ -7,16 +7,15 @@ import security.Security
 
 object Global extends GlobalSettings {
 
-  //  override def onRouteRequest(requestHeader: RequestHeader): Option[Handler] = {
-  //
-  //    super.onRouteRequest(requestHeader) map {
-  //      case a: Action[_] if requestHeader.path.contains("/api/") => Action(a.parser) { implicit request =>
-  //        Security.verify {
-  //          a(request)
-  //        }
-  //      }
-  //      case h => h
-  //    }
-  //  }
+  override def onRouteRequest(requestHeader: RequestHeader): Option[Handler] = {
+    super.onRouteRequest(requestHeader) map {
+      case a: Action[_] => Action(a.parser) { implicit request =>
+        Security.verify {
+          a(request)
+        }
+      }
+      case h => h
+    }
+  }
 
 }

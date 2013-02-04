@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /       		                    controllers.Application.index
+GET     /       		                    controllers.doc.v1.Docs.index
 GET		/api/v1/layers/:layerTpe			controllers.api.v1.GeoLayers.layers(layerTpe: String)
 
 # Map static resources from the /public folder to the /assets URL path
