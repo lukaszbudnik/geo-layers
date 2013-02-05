@@ -6,4 +6,5 @@ services:
 before_script: 
   - wget http://download.playframework.org/releases/play-${PLAY_VERSION}.zip
   - unzip -q play-${PLAY_VERSION}.zip 
+  - mongo conf/mongodb/indexes.js
 script: play-${PLAY_VERSION}/play test
