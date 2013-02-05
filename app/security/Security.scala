@@ -1,28 +1,28 @@
 package security
 
 import play.api.mvc.Request
-import play.api.mvc.AnyContent
-import models.Caller
-import play.api.mvc.Action
 import play.api.mvc.Result
 import play.api.mvc.Results
+import models.Client
+import play.api.libs.json.Json
 
-object Security {
+trait Security {
 
-  val GeoLayersCallerId = "X-GEOLAYERS-CALLER-ID"
-  val GeoLayersCallerToken = "X-GEOLAYERS-CALLER-TOKEN"
+  val GeoLayersClientId = "X-GEO-LAYERS-CLIENT-ID"
+  val GeoLayersClientToken = "X-GEO-LAYERS-CLIENT-TOKEN"
 
-  def verify(result: Result)(implicit request: Request[_]): Result = {
+  def verify(result: () => Result)(implicit request: Request[_]): Result = {
 
-    val caller = (for (
-      id <- request.headers.get(GeoLayersCallerId);
-      token <- request.headers.get(GeoLayersCallerToken)
-    ) yield Caller("id", "token", true))
+    val client = (for (
+      id <- request.headers.get(GeoLayersClientId);
+      token <- request.headers.get(GeoLayersClientToken);
+      client <- Client.findOneByEmailAndToken(id, token)
+    ) yield client)
 
-    caller match {
-      case Some(Caller(_, _, true)) => result
-      case Some(Caller(_, _, false)) => Results.Forbidden("The caller is blocked")
-      case None => Results.Forbidden("The caller id and/or caller token not found in request")
+    client match {
+      case Some(Client(_, _, _, _, false)) => result()
+      case Some(Client(_, _, _, _, true)) => Results.Forbidden(Json.toJson("The client is blocked"))
+      case None => Results.Unauthorized(Json.toJson("The client id and/or client token not found in request"))
     }
 
   }
