@@ -1,5 +1,41 @@
-@main("Documentation V1") {
+@main("Geo Layers v1") {
     
-    <h1>Documentation v1</h1>
+    <h1>Geo Layers v1</h1>
     
+    <p>This is a simple Play20! application which offers a RESTful API for retrieving geo locations based on:</p>
+    
+    <ul>
+    	<li>geo layer - it can be restaurants, theaters, hospitals, ATMs, bus stops, and so on</li>
+    	<li>GPS position</li>
+    </ul>
+    
+    <h2>Client authorisation and authentication</h2>
+    
+    <p>In order to call the RESTful API you need to add the following headers to HTTPS requests:</p>
+    
+    <ul>
+    	<li>@{security.Security.GeoLayersClientId} - client id (an email for example)</li>
+    	<li>@{security.Security.GeoLayersClientToken} - token (randomly generated string)</li>
+    </ul>
+    
+    <p>In order to get your client id and token please contact Lukasz Budnik lukasz.budnik(at)outlook.com.</p>
+    
+    <p>Warning: do not call the RESTful API over HTTP. Use HTTPS only. Using HTTP will compromise your token.</p>
+    
+    <h2>API documentation</h2>
+    
+    <div style="margin-left: 50px">
+	    <h3>/api/v1/locations/<i>{layerType}</i></h3>
+	    
+	    <p>The above call will return max 100 records for the <i>layerType</i>.</p>
+	    
+	    <h3>/api/v1/locations/<i>{layerType}</i>/<i>{latitude}</i>/<i>{longitude}</i></h3>
+	    
+	    <p>The above call will return max 100 records for the <i>layerType</i> sorted by locations closer to a point determined by {latitude} and {longitude}.</p> 	
+	
+	    <h3>/api/v1/locations/<i>{layerType}</i>/<i>{latitude}</i>/<i>{longitude}</i>/<i>{maxDistance}</i></h3>
+	    
+	    <p>The above call will return max 100 records for the <i>layerType</i> within the maximum distance of <i>maxDistance</i> from the location defined by {latitude} and {longitude}.</p>
+	</div> 
+
 }
