@@ -65,7 +65,7 @@ class LocationIntegrationSpec extends Specification {
       }
     }
     
-    "be retrievable by layerType and coordinates" in {
+    "be retrievable by layerType and coordinates and max distance" in {
       running(FakeApplication()) {
         val locations1 = Location.findByLayerTypeAndCoordinatesAndMaxDistance("test", Coordinates(10.3, 10.0), 0.0001)
         locations1 must beEmpty
