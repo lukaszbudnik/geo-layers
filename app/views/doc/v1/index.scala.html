@@ -25,17 +25,50 @@
     <h2>API documentation</h2>
     
     <div style="margin-left: 50px">
-	    <h3>/api/v1/locations/<i>{layerType}</i></h3>
+	    <h3>GET /api/v1/locations/<i>{layerType}</i></h3>
 	    
 	    <p>The above call will return max 100 records for the <i>layerType</i>.</p>
 	    
-	    <h3>/api/v1/locations/<i>{layerType}</i>/<i>{latitude}</i>/<i>{longitude}</i></h3>
+	    <h3>GET /api/v1/locations/<i>{layerType}</i>/<i>{latitude}</i>/<i>{longitude}</i></h3>
 	    
 	    <p>The above call will return max 100 records for the <i>layerType</i> sorted by locations closer to a point determined by {latitude} and {longitude}.</p> 	
 	
-	    <h3>/api/v1/locations/<i>{layerType}</i>/<i>{latitude}</i>/<i>{longitude}</i>/<i>{maxDistance}</i></h3>
+	    <h3>GET /api/v1/locations/<i>{layerType}</i>/<i>{latitude}</i>/<i>{longitude}</i>/<i>{maxDistance}</i></h3>
 	    
 	    <p>The above call will return max 100 records for the <i>layerType</i> within the maximum distance of <i>maxDistance</i> from the location defined by {latitude} and {longitude}.</p>
-	</div> 
+	    
+    	<h3>Optiona parameters</h3>
+    	
+    	<p>Currently there is only 1 optional parameter called <i>limit</i> which allows you to limit records returned by RESTful API. <i>limit</i> parameter is passed as a query string parameter.</p>
+    	
+    	<h3>Testing</h3>
+    	
+    	<p>The RESTful API has been designed to be as simple as possible. All methods are GET methods, but the fact that HTTP headers are used to convey authentication and authorisation data doesn't make it
+    	easy to test. The following code snippets should give you some general idea about testing the API.</p>
+	
+		<p>For testing purposes you may want to use jQuery:</p>
+		
+		<pre>
+$.ajax({
+	url: '/api/v1/locations/testLayer',
+	type: 'GET',
+	headers: {
+		'@{security.Security.GeoLayersClientId}': 'ABC',
+		'@{security.Security.GeoLayersClientToken}': 'XYZ'
+	},
+	data: {
+		limit: 1
+	}
+})
+.done(function (data) { alert('Got ' + data.length + ' locations'); })
+.fail(function (jqXHR, textStatus) { alert('Something went wrong...'); });
+		</pre> 
+		
+		<p>Or if you use Scala Play20!:</p>
+		
+		<pre>val result = WS.url("http://localhost:3344/api/v1/locations/testLayer").withQueryString("limit" -> "1").withHeaders(Security.GeoLayersClientId -> "ABC", Security.GeoLayersClientToken -> "XYZ")</pre>
+		
+		<p>&nbsp;</p>
 
+	</div>
 }
