@@ -67,9 +67,9 @@ class LocationIntegrationSpec extends Specification {
     "be retrievable by layerType with limit" in {
       running(FakeApplication()) {
         val allLocations = Location.findByLayerType("test")
+		allLocations.size must beLessThanOrEqualTo(Location.defaultLimit)
         
         val locationsWithLimit = Location.findByLayerType("test", Some(1))
-        
         allLocations.size must beGreaterThan(locationsWithLimit.size)
       }
     }
