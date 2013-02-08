@@ -6,12 +6,12 @@ import play.api.mvc.Results
 import models.Client
 import play.api.libs.json.Json
 
-trait Security {
+object Security {
 
   val GeoLayersClientId = "X-GEO-LAYERS-CLIENT-ID"
   val GeoLayersClientToken = "X-GEO-LAYERS-CLIENT-TOKEN"
 
-  def verify(result: () => Result)(implicit request: Request[_]): Result = {
+  def ensureClientVerified(request: Request[_], block: => Result): Result = {
 
     val client = (for (
       id <- request.headers.get(GeoLayersClientId);
@@ -20,7 +20,7 @@ trait Security {
     ) yield client)
 
     client match {
-      case Some(Client(_, _, _, _, false)) => result()
+      case Some(Client(_, _, _, _, false)) => block
       case Some(Client(_, _, _, _, true)) => Results.Forbidden(Json.toJson("The client is blocked"))
       case None => Results.Unauthorized(Json.toJson("The client id and/or client token not found in request"))
     }
