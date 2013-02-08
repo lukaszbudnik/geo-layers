@@ -19,6 +19,9 @@ case class Location(@Key("_id") id: ObjectId, layerType: String, coordinates: Ba
 case class Coordinates(latitude: Double, longitude: Double)
 
 object Location extends ModelCompanion[Location, ObjectId] {
+  
+  val defaultLimit = 100
+  
   private val collection = mongoCollection("locations")
 
   val dao = new SalatDAO[Location, ObjectId](collection = collection) {}
@@ -27,8 +30,13 @@ object Location extends ModelCompanion[Location, ObjectId] {
     findAll().toIterable
   }
   
-  def findByLayerType(layerType: String): Iterable[Location] = {
-    find(MongoDBObject("layerType" -> layerType)).toIterable
+  def findByLayerType(layerType: String, limit: Option[Int] = Some(defaultLimit)): Iterable[Location] = {
+    val cursor = find(MongoDBObject("layerType" -> layerType))
+    val newCursor = limit match {
+      case Some(limit) => cursor.limit(limit)
+      case None => cursor
+    }
+    newCursor.toIterable
   }
   
   def findByLayerTypeAndCoordinates(layerType: String, coordinates: Coordinates): Iterable[Location] = {

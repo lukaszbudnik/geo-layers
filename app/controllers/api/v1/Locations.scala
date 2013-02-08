@@ -10,19 +10,36 @@ import security.SecuredAction
 
 object Locations extends Controller {
 
-  def locationsByLayerType(layerType: String) = SecuredAction { implicit request =>
-    val locations = Location.findByLayerType(layerType)
+  val maxLimit = 100
+
+  def locationsByLayerType(layerType: String, limit: Option[Int]) = SecuredAction { implicit request =>
+    val newLimit = getNewLimit(limit)
+    
+    println(newLimit)
+
+    val locations = Location.findByLayerType(layerType, Some(newLimit))
     Ok(Json.parse(Location.toCompactJSONArray(locations)))
   }
 
-  def locationsByLayerTypeAndCoordinates(layerType: String, latitude: Double, longitude: Double) = SecuredAction { implicit request =>
+  def locationsByLayerTypeAndCoordinates(layerType: String, latitude: Double, longitude: Double, limit: Option[Int]) = SecuredAction { implicit request =>
+    val newLimit = getNewLimit(limit)
+
     val locations = Location.findByLayerTypeAndCoordinates(layerType, Coordinates(latitude, longitude))
     Ok(Json.parse(Location.toCompactJSONArray(locations)))
   }
 
-  def locationsByLayerTypeAndCoordinatesAndMaxDistance(layerType: String, latitude: Double, longitude: Double, maxDistance: Double) = SecuredAction { implicit request =>
+  def locationsByLayerTypeAndCoordinatesAndMaxDistance(layerType: String, latitude: Double, longitude: Double, maxDistance: Double, limit: Option[Int]) = SecuredAction { implicit request =>
+    val newLimit = getNewLimit(limit)
+
     val locations = Location.findByLayerTypeAndCoordinatesAndMaxDistance(layerType, Coordinates(latitude, longitude), maxDistance)
     Ok(Json.parse(Location.toCompactJSONArray(locations)))
+  }
+
+  private def getNewLimit(limit: Option[Int]): Int = {
+    limit match {
+      case Some(limit) if limit <= maxLimit => limit
+      case _ => maxLimit
+    }
   }
 
 }
