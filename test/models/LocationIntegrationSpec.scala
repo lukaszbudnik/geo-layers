@@ -69,7 +69,7 @@ class LocationIntegrationSpec extends Specification {
         val allLocations = Location.findByLayerType("test")
 		allLocations.size must beLessThanOrEqualTo(Location.defaultLimit)
         
-        val locationsWithLimit = Location.findByLayerType("test", Some(1))
+        val locationsWithLimit = Location.findByLayerType("test", 1)
         allLocations.size must beGreaterThan(locationsWithLimit.size)
       }
     }
@@ -99,11 +99,11 @@ class LocationIntegrationSpec extends Specification {
     
     "be removable" in {
       running(FakeApplication()) {
-        val locations1 = Location.findByLayerType("test", None)
+        val locations1 = Location.findByLayerType("test", 0)
 
         locations1.foreach(Location.remove(_))
 
-        val locations2 = Location.findByLayerType("test", None)
+        val locations2 = Location.findByLayerType("test", 0)
 
         locations2 must beEmpty
       }

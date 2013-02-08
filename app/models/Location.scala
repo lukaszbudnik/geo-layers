@@ -20,6 +20,8 @@ case class Coordinates(latitude: Double, longitude: Double)
 
 object Location extends ModelCompanion[Location, ObjectId] {
   
+  // by default MongoDB returns 100 records for any geo-related queries
+  // this variable is to keep things consistent with non geo-related queries like findByLayerType
   val defaultLimit = 100
   
   private val collection = mongoCollection("locations")
@@ -30,13 +32,12 @@ object Location extends ModelCompanion[Location, ObjectId] {
     findAll().toIterable
   }
   
-  def findByLayerType(layerType: String, limit: Option[Int] = Some(defaultLimit)): Iterable[Location] = {
-    val cursor = find(MongoDBObject("layerType" -> layerType))
-    val newCursor = limit match {
-      case Some(limit) => cursor.limit(limit)
-      case None => cursor
-    }
-    newCursor.toIterable
+  def findByLayerType(layerType: String, limit: Int = defaultLimit): Iterable[Location] = {
+    
+    println(limit)
+    
+    val cursor = find(MongoDBObject("layerType" -> layerType)).limit(limit)
+    cursor.toIterable
   }
   
   def findByLayerTypeAndCoordinates(layerType: String, coordinates: Coordinates): Iterable[Location] = {
