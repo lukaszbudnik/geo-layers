@@ -15,8 +15,6 @@ object Locations extends Controller {
   def locationsByLayerType(layerType: String, limit: Option[Int]) = SecuredAction { implicit request =>
     val newLimit = getNewLimit(limit)
     
-    println(newLimit)
-
     val locations = Location.findByLayerType(layerType, Some(newLimit))
     Ok(Json.parse(Location.toCompactJSONArray(locations)))
   }

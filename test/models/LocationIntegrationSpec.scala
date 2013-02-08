@@ -18,9 +18,8 @@ class LocationIntegrationSpec extends Specification {
 
     "be insertable" in {
       running(FakeApplication()) {
-
         val list = new BasicBSONList
-        list.put(0, 10);
+        list.put(0, 10)
         list.put(1, 10.1)
 
         val location = Location(new ObjectId, "test", list, None)
@@ -28,6 +27,16 @@ class LocationIntegrationSpec extends Specification {
         val id = Location.insert(location)
 
         id must beSome[ObjectId]
+        
+        val list2 = new BasicBSONList
+        list2.put(0, 1.000001)
+        list2.put(1, 0.999999)
+
+        val location2 = Location(new ObjectId, "test", list, None)
+
+        val id2 = Location.insert(location2)
+
+        id2 must beSome[ObjectId]
       }
     }
 
@@ -52,6 +61,16 @@ class LocationIntegrationSpec extends Specification {
         
         val locations2 = Location.findByLayerType("test2")
         locations2 must beEmpty
+      }
+    }
+    
+    "be retrievable by layerType with limit" in {
+      running(FakeApplication()) {
+        val allLocations = Location.findByLayerType("test")
+        
+        val locationsWithLimit = Location.findByLayerType("test", Some(1))
+        
+        allLocations.size must beGreaterThan(locationsWithLimit.size)
       }
     }
     
@@ -80,11 +99,11 @@ class LocationIntegrationSpec extends Specification {
     
     "be removable" in {
       running(FakeApplication()) {
-        val locations1 = Location.findByLayerType("test")
+        val locations1 = Location.findByLayerType("test", None)
 
         locations1.foreach(Location.remove(_))
 
-        val locations2 = Location.findByLayerType("test")
+        val locations2 = Location.findByLayerType("test", None)
 
         locations2 must beEmpty
       }
