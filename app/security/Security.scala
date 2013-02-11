@@ -28,7 +28,7 @@ trait Security {
         token <- request.headers.get(Security.GeoLayersClientToken);
         client <- Client.findOneByEmailAndToken(id, token)
       ) yield client)
-
+      
       client match {
         case None => Results.Unauthorized(Json.toJson("The client id and/or client token not found in request"))
         case Some(Client(_, _, _, _, true)) => Results.Forbidden(Json.toJson("The client is blocked"))

@@ -33,9 +33,6 @@ object Location extends ModelCompanion[Location, ObjectId] {
   }
   
   def findByLayerType(layerType: String, limit: Int = defaultLimit): Iterable[Location] = {
-    
-    println(limit)
-    
     val cursor = find(MongoDBObject("layerType" -> layerType)).limit(limit)
     cursor.toIterable
   }
