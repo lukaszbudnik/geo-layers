@@ -1,6 +1,6 @@
 language: java
 env:
-  - PLAY_VERSION=2.0.4 MONGODB_URI=mongodb://127.0.0.1/test
+  - PLAY_VERSION=2.1.0 MONGODB_URI=mongodb://127.0.0.1/test
 services:
   - mongodb
 before_script: 
