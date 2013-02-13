@@ -4,7 +4,7 @@ env:
 services:
   - mongodb
 before_script: 
-  - wget http://download.playframework.org/releases/play-${PLAY_VERSION}.zip
+  - wget http://downloads.typesafe.com/play/${PLAY_VERSION}/play-${PLAY_VERSION}.zip
   - unzip -q play-${PLAY_VERSION}.zip 
   - mongo conf/mongodb/prod/indexes.js
   - mongo conf/mongodb/test/clients.js
