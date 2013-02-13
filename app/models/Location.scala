@@ -9,7 +9,6 @@ import com.novus.salat.global._
 
 import com.novus.salat.annotations._
 import com.mongodb.casbah.Imports._
-import org.scala_tools.time.Imports._
 import com.novus.salat.dao.{ SalatDAO, ModelCompanion }
 
 import se.radley.plugin.salat._
