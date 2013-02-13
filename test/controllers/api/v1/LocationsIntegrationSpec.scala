@@ -1,20 +1,24 @@
 package controllers.api.v1
 
-import java.util.concurrent.TimeUnit
 import org.specs2.mutable.Specification
-import play.api.libs.json.JsArray
-import play.api.libs.ws.WS
+
+import play.api.test.Helpers.GET
+import play.api.test.Helpers.OK
+import play.api.test.Helpers.contentAsString
+import play.api.test.Helpers.contentType
+import play.api.test.Helpers.route
 import play.api.test.Helpers.running
+import play.api.test.Helpers.status
+import play.api.test.Helpers.writeableOf_AnyContentAsFormUrlEncoded
 import play.api.test.FakeApplication
-import play.api.test.FakeHeaders
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import security.Security
+import play.api.test.FakeHeaders
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.Result
-import play.api.mvc.SimpleResult
-import play.api.mvc._
 import play.api.http.Status
 import play.api.libs.json.Json
+
+import security.Security
 
 class LocationsIntegrationSpec extends Specification {
 
@@ -23,7 +27,7 @@ class LocationsIntegrationSpec extends Specification {
     "return locations by layerType" in {
       running(FakeApplication()) {
 
-        val fakeHeadersMap: Map[String, Seq[String]] = Map(
+        val fakeHeadersMap: Seq[(String, Seq[String])] = Seq(
           Security.GeoLayersClientId -> Seq("lukasz.budnik@hotmail.com"),
           Security.GeoLayersClientToken -> Seq("token"))
 
@@ -33,7 +37,7 @@ class LocationsIntegrationSpec extends Specification {
 
         val fakeRequest = FakeRequest("POST", "/api/v1/locations/integrationTest", fakeHeaders, fakeBody, null)
 
-        val resultOption = routeAndCall(fakeRequest)
+        val resultOption = route(fakeRequest)
 
         resultOption must beSome[Result].which {
           case result if status(result) == Status.OK => true

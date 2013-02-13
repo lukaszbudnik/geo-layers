@@ -6,9 +6,10 @@ import play.api.test.Helpers.GET
 import play.api.test.Helpers.OK
 import play.api.test.Helpers.contentAsString
 import play.api.test.Helpers.contentType
-import play.api.test.Helpers.routeAndCall
+import play.api.test.Helpers.route
 import play.api.test.Helpers.running
 import play.api.test.Helpers.status
+import play.api.test.Helpers.writeableOf_AnyContentAsEmpty
 import play.api.test.FakeApplication
 import play.api.test.FakeRequest
 
@@ -18,7 +19,7 @@ class DocsSpec extends Specification {
 
     "render the index page" in {
       running(FakeApplication()) {
-        val home = routeAndCall(FakeRequest(GET, "/")).get
+        val home = route(FakeRequest(GET, "/")).get
 
         status(home) must equalTo(OK)
         contentType(home) must beSome.which(_ == "text/html")
