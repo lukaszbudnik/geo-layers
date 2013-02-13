@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import PlayProject._
+import play.Project._
 
 object ApplicationBuild extends Build {
 
@@ -8,10 +8,13 @@ object ApplicationBuild extends Build {
   val appVersion = "0.1"
 
   val appDependencies = Seq(
-    "se.radley" %% "play-plugins-salat" % "1.1")
+    "se.radley" %% "play-plugins-salat" % "1.2",
+    "com.novus" %% "salat" % "1.9.2-SNAPSHOT")
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+  val main = play.Project(appName, appVersion, appDependencies).settings(
+    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     routesImport += "se.radley.plugin.salat.Binders._",
-    templatesImport += "org.bson.types.ObjectId")
+    templatesImport += "org.bson.types.ObjectId",
+    offline := true)
 
 }
